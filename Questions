@@ -1,0 +1,27 @@
+// Que >- Calculate number of subsets with sum equal to given target.
+class Solution {
+    // RADHE RADHE 
+    // Function to calculate the number of subsets with a given sum
+    public static int helper(int idx , int[] nums , int target){
+        if(idx==nums.length){
+            if(target==0){
+                return 1 ; 
+            }
+            else{
+                return 0 ; 
+            }
+        }
+            // pick 
+            int l = helper(idx+1,nums,target-nums[idx]);
+            int r = helper(idx+1,nums,target);
+            
+            return l+r ;
+        
+    }
+    public int perfectSum(int[] nums, int target) {
+        // code here
+        return helper(0,nums,target);
+    }
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
