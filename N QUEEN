@@ -1,0 +1,120 @@
+The idea is to use backtracking to check all possible combinations of n queens in a chessboard of order n*n. 
+To do so, first create an auxiliary matrix mat[][] of order n*n to mark the cellsoccupied by queens. 
+Start from the first row and for each row  place queen at different columns and check for clashes with other queens. 
+To check for clashes, iterate through all the rows of current column and both the diagonals.
+If it is safe to place queen in current column, mark the cell occupied in matrix mat[][] and move to the next row. 
+If at any row, there is no safe column to place the queen, backtrack to previous row and place the queen in other safe column 
+and again check for the next row.
+
+
+CODE >- 
+class Solution {
+    
+    /**
+     * This function extracts the column positions of queens from the board.
+     * It represents the solution in a 1-based index format.
+     * Example: If a queen is placed in column 2 of row 1, it stores `2` in the list.
+     */
+    static ArrayList<Integer> function(int[][] board) {
+        ArrayList<Integer> a = new ArrayList<>();
+        
+        // Iterate through each row to find the column where the queen is placed.
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 1) { // Queen is found
+                    a.add(j + 1); // Store column (1-based index)
+                    break; // Move to the next row
+                }
+            }
+        }
+        return a;
+    }
+
+    /**
+     * This function checks if a queen can be safely placed at board[i][j].
+     * It ensures that no other queen is attacking this position.
+     */
+    static boolean isSafe(int[][] board, int i, int j) {
+        int r = i;
+        int c = j;
+
+        // Check upper-left diagonal (\)
+        while (r >= 0 && c >= 0) {
+            if (board[r][c] == 1) {
+                return false; // Conflict detected
+            }
+            r--;
+            c--;
+        }
+
+        // Check left side (same row)
+        r = i;
+        c = j;
+        while (c >= 0) {
+            if (board[r][c] == 1) {
+                return false; // Conflict detected
+            }
+            c--;
+        }
+
+        // Check lower-left diagonal (/)
+        r = i;
+        c = j;
+        while (r < board.length && c >= 0) {
+            if (board[r][c] == 1) {
+                return false; // Conflict detected
+            }
+            r++;
+            c--;
+        }
+
+        return true; // Safe to place queen
+    }
+
+    /**
+     * Recursive backtracking function to find all valid queen placements.
+     * @param col   The current column being considered.
+     * @param n     The size of the board (n x n).
+     * @param ans   The list of valid solutions.
+     * @param board The chessboard matrix.
+     */
+    static void helper(int col, int n, ArrayList<ArrayList<Integer>> ans, int[][] board) {
+        // Base case: If all queens are placed, store the solution
+        if (col == n) {
+            ans.add(function(board)); // Convert board to solution format
+            return;
+        }
+
+        // Try placing a queen in each row of the current column
+        for (int i = 0; i < n; i++) {
+            if (isSafe(board, i, col)) { // Check if it's safe
+                board[i][col] = 1; // Place queen
+
+                // Recur for the next column
+                helper(col + 1, n, ans, board);
+
+                // Backtrack: Remove queen and try another row
+                board[i][col] = 0;
+            }
+        }
+    }
+
+    /**
+     * Main function to solve the N-Queens problem.
+     * It initializes the board and starts the recursive helper function.
+     * @param n The size of the board (n x n).
+     * @return A list of valid solutions where each solution is represented as a list of column indices.
+     */
+    public ArrayList<ArrayList<Integer>> nQueen(int n) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        int[][] board = new int[n][n]; // Initialize empty board
+        
+        // Start solving from the first column
+        helper(0, n, ans, board);
+        
+        return ans;
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
