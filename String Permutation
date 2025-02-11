@@ -1,0 +1,44 @@
+Find All Permutations of a String (Backtracking)
+This Java program generates all unique permutations of a given string using backtracking.
+
+Approach:
+Swap and Explore – We swap characters at different positions to generate new permutations.
+Recursive Backtracking – We recursively call the function for the next index while swapping back after each recursive call to restore the original string.
+Use a HashSet – To store only unique permutations and avoid duplicates.
+Time Complexity:
+O(N!), where N is the length of the string, as we generate all possible permutations.
+Example:
+java
+Input: s = "ABC"  
+Output: ["ABC", "ACB", "BAC", "BCA", "CAB", "CBA"]
+This implementation ensures that all distinct permutations of the string are stored and returned in an ArrayList.
+
+
+class Solution {
+    static String swap(String s , int i , int j ){
+        StringBuilder sb = new StringBuilder(s);
+        sb.setCharAt(i,s.charAt(j));
+        sb.setCharAt(j,s.charAt(i));
+        return sb.toString();
+    }
+    static void helper(int idx,String s,HashSet<String> ans){
+        if(idx==s.length()){
+            ans.add(s);
+            return ; 
+        }
+        
+        for(int i = idx ; i<s.length() ; i++){
+            s = swap(s,i,idx);
+            helper(idx+1,s,ans);
+            s = swap(s,i,idx);
+        }
+    } 
+    public ArrayList<String> findPermutation(String s) {
+        // Code here
+        HashSet<String> ans = new HashSet<>();
+        
+        helper(0,s,ans);
+        return new ArrayList<>(ans) ;
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
